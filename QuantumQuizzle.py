@@ -65,3 +65,4 @@ elif choice == '/':
     division(int(much))
 else:
     print("OOf that is not a option.")
+print("Hello")
