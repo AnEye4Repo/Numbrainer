@@ -1,17 +1,20 @@
 #!/bin/python3
+from tkinter import *
 
-def addition(x):
-    numAdd = []
-    sum = 0
-    i=1
-    while i <= x :
-        num = int(input("Enter a number: \n"))
-        numAdd.append(num)
-        sum+=num
-        num = 0
-        i+=1
-    print(sum)
-    print(numAdd)
+def addition():
+    # x=int(input("How many numbers would you like to use\n:"))
+    # numAdd = []
+    # sum = 0
+    # i=1
+    # while i <= x :
+    #     num = int(input("Enter a number: \n"))
+    #     numAdd.append(num)
+    #     sum+=num
+    #     num = 0
+    #     i+=1
+    # print(sum)
+    # print(numAdd)
+    return print('m')
 def subtraction(x):
     numSub = []
     sum = 0
@@ -49,20 +52,30 @@ def division(x):
     print(sum)
     print(numDiv)
 
-print("Hello and welcome to QuantumQuizzle")
-choice = input("Choose a topic: +, - , /, *\n")
-if choice == '+':
-    much=input("How many numbers would you like to use\n:")
-    addition(int(much))
-elif choice == '-':
-    much=input("How many numbers would you like to use\n:")
-    subtraction(int(much))
-elif choice == '*':
-    much=input("How many numbers would you like to use\n:")
-    multiplication(int(much))
-elif choice == '/':
-    much=input("How many numbers would you like to use\n:")
-    division(int(much))
-else:
-    print("OOf that is not a option.")
-print("Hello")
+# print("Hello and welcome to QuantumQuizzle")
+# choice = input("Choose a topic: +, - , /, *\n")
+# if choice == '+':
+#     much=input("How many numbers would you like to use\n:")
+#     addition(int(much))
+# elif choice == '-':
+#     much=input("How many numbers would you like to use\n:")
+#     subtraction(int(much))
+# elif choice == '*':
+#     much=input("How many numbers would you like to use\n:")
+#     multiplication(int(much))
+# elif choice == '/':
+#     much=input("How many numbers would you like to use\n:")
+#     division(int(much))
+# else:
+#     print("OOf that is not a option.")
+
+window = Tk ()
+window.geometry ("800x500")
+
+ProgName = Label(window,font=('Times new roman', 20, 'bold'), text="QuantumQuizzle (^_^)", fg = "Purple")
+ProgName.place(relx=.4,rely=.01)
+chooseType = Label(window,font=('Times new roman',20, 'bold'), text="Choose between Addition, Subtraction, Multiplication, and division", fg="Green")
+chooseType.place(relx=.02,rely=.3)
+optionAdd= Button(window ,font = ('Times new roman', 15, 'italic'), text="Addition", variable = addition())
+optionAdd.place(relx=.01,rely=.5)
+window.mainloop()
