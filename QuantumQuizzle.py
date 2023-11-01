@@ -16,9 +16,13 @@ def division():
 
 window = Tk()
 window.geometry("800x500")
+window.title("QuantumQuizzle")
 
-ProgName = Label(window, font=('Times new roman', 20, 'bold'), text="QuantumQuizzle (^_^)", fg="Purple")
-ProgName.place(relx=.4, rely=.01)
+# frame = ttk.Frame(window)
+# frame.pack(pady=10)
+
+ProgName = Label(window, font=('Times new roman', 50, 'bold'), text="QuantumQuizzle (^_^)", fg="Purple")
+ProgName.place(relx=.3, rely=.01)
 
 chooseType = Label(window, font=('Times new roman', 20, 'bold'), text="Choose between Addition, Subtraction, Multiplication, and Division", fg="Green")
 chooseType.place(relx=.02, rely=.2)
@@ -35,6 +39,8 @@ optionDiv.place(relx=.01, rely=.7)
 result_label = Label(window, font=('Times new roman', 15, 'bold'), text="")
 result_label.place(relx=.2, rely=.8)
 
+resultOne=ttk.Label(window, text="Enter a Number: ")
+resultOne.place(relx=.3,rely=.5)
 enter = Entry(window)
-enter.place(relx=.3, rely=.5)
+enter.place(relx=.6, rely=.5)
 window.mainloop()
