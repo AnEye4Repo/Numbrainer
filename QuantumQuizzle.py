@@ -74,8 +74,19 @@ window.geometry ("800x500")
 
 ProgName = Label(window,font=('Times new roman', 20, 'bold'), text="QuantumQuizzle (^_^)", fg = "Purple")
 ProgName.place(relx=.4,rely=.01)
-chooseType = Label(window,font=('Times new roman',20, 'bold'), text="Choose between Addition, Subtraction, Multiplication, and division", fg="Green")
-chooseType.place(relx=.02,rely=.3)
+
+chooseType = Label(window,font=('Times new roman',20, 'bold'), text="Choose between Addition, Subtraction, Multiplication, and Division", fg="Green")
+chooseType.place(relx=.02,rely=.2)
+
 optionAdd= Button(window ,font = ('Times new roman', 15, 'italic'), text="Addition", variable = addition())
-optionAdd.place(relx=.01,rely=.5)
+optionAdd.place(relx=.01,rely=.4)
+optionSub= Button(window ,font = ('Times new roman', 15, 'italic'), text="Subtraction", variable = addition())
+optionSub.place(relx=.01,rely=.5)
+optionMult= Button(window ,font = ('Times new roman', 15, 'italic'), text="Multiplication", variable = addition())
+optionMult.place(relx=.01,rely=.6)
+optionDiv= Button(window ,font = ('Times new roman', 15, 'italic'), text="Division", variable = addition())
+optionDiv.place(relx=.01,rely=.7)
+
+enter = Entry(window)
+enter.place(relx=.3,rely = .5)
 window.mainloop()
