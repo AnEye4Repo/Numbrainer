@@ -4,15 +4,31 @@ from tkinter import ttk
 
 def addition():
     result_label.config(text="Addition button pressed")
+    num1 = float(enterOne.get())
+    num2 = float(enterTwo.get())
+    result = num1 + num2
+    result_label.config(text=f"Result: {result}")
     
 def subtraction():
     result_label.config(text="Subtraction button pressed")
+    num1 = float(enterOne.get())
+    num2 = float(enterTwo.get())
+    result = num1 - num2
+    result_label.config(text=f"Result: {result}")
 
 def multiplication():
     result_label.config(text="Multiplication button pressed")
+    num1 = float(enterOne.get())
+    num2 = float(enterTwo.get())
+    result = num1 * num2
+    result_label.config(text=f"Result: {result}")
 
 def division():
     result_label.config(text="Division button pressed")
+    num1 = float(enterOne.get())
+    num2 = float(enterTwo.get())
+    result = num1 / num2
+    result_label.config(text=f"Result: {result}")
 
 window = Tk()
 window.geometry("800x500")
@@ -41,6 +57,12 @@ result_label.place(relx=.2, rely=.8)
 
 resultOne=ttk.Label(window, text="Enter a Number: ")
 resultOne.place(relx=.3,rely=.5)
-enter = Entry(window)
-enter.place(relx=.6, rely=.5)
+enterOne = Entry(window)
+enterOne.place(relx=.43, rely=.5)
+
+resultTwo=ttk.Label(window, text="Enter a Number: ")
+resultTwo.place(relx=.3,rely=.7)
+enterTwo = Entry(window)
+enterTwo.place(relx=.43, rely=.7)
+
 window.mainloop()
