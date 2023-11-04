@@ -2,67 +2,155 @@
 from tkinter import *
 from tkinter import ttk
 
-def addition():
-    result_label.config(text="Addition button pressed")
-    num1 = float(enterOne.get())
-    num2 = float(enterTwo.get())
-    result = num1 + num2
-    result_label.config(text=f"Result: {result}")
-    
-def subtraction():
-    result_label.config(text="Subtraction button pressed")
-    num1 = float(enterOne.get())
-    num2 = float(enterTwo.get())
-    result = num1 - num2
-    result_label.config(text=f"Result: {result}")
+def solve_equation():
+    equation = equation_entry.get()
+    try:
+        left, right = equation.split('=')
+        left = left.strip()
+        right = right.strip()
+        if '+' in left:
+            progress.config(text="+ is being detected ^o^")
+            x_coefficient, constant = left.split('x')
+            x_coefficient = float(x_coefficient.strip())
+            befoCon = float(constant.strip('+'))
+            constant = float(right) - float(constant.strip())
 
-def multiplication():
-    result_label.config(text="Multiplication button pressed")
-    num1 = float(enterOne.get())
-    num2 = float(enterTwo.get())
-    result = num1 * num2
-    result_label.config(text=f"Result: {result}")
+            # Check for division by zero
+            if x_coefficient == 0:
+                result_text.set("Error: Division by zero")
+                steps_text.delete(1.0, END)
+            else:
+            # Calculate and display the result
+                result = constant / x_coefficient
 
-def division():
-    result_label.config(text="Division button pressed")
-    num1 = float(enterOne.get())
-    num2 = float(enterTwo.get())
-    result = num1 / num2
-    result_label.config(text=f"Result: {result}")
+                steps = []
+                steps.append(f"Solving equation: {equation}")
+                steps.append(f"Step 1: Rearrange the equation")
+                steps.append(f"{x_coefficient}x = {right} - {befoCon}")
+                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
+                steps.append(f"x = {constant} / {x_coefficient}")
+                steps.append(f"x = {constant/x_coefficient}")
+
+                result_text.set(f"Result: x = {result}")
+                steps_text.delete(1.0, END)
+                for step in steps:
+                    steps_text.insert(END, step + "\n")
+
+        elif '-' in left:
+            progress.config(text="- is being detected ^o^")
+            x_coefficient, constant = left.split('x')
+            x_coefficient = float(x_coefficient.strip())
+            befoCon = float(constant.strip('-'))
+            constant = float(right) + float(constant.strip('-'))
+
+            # Check for division by zero
+            if x_coefficient == 0:
+                result_text.set("Error: Division by zero")
+                steps_text.delete(1.0, END)
+            else:
+            # Calculate and display the result
+                result = constant / x_coefficient
+
+                steps = []
+                steps.append(f"Solving equation: {equation}")
+                steps.append(f"Step 1: Rearrange the equation")
+                steps.append(f"{x_coefficient}x = {right} + {befoCon}")
+                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
+                steps.append(f"x = {constant} / {x_coefficient}")
+                steps.append(f"x = {constant/x_coefficient}")
+
+                result_text.set(f"Result: x = {result}")
+                steps_text.delete(1.0, END)
+                for step in steps:
+                    steps_text.insert(END, step + "\n")
+
+        elif '*' in left:
+            progress.config(text="* is being detected ^o^")
+            x_coefficient, constant = left.split('x')
+            x_coefficient = float(x_coefficient.strip())
+            befoCon = float(constant.strip('*'))
+            constant = float(right) / float(constant.strip('*'))
+
+            # Check for division by zero
+            if x_coefficient == 0:
+                result_text.set("Error: Division by zero")
+                steps_text.delete(1.0, END)
+            else:
+            # Calculate and display the result
+                result = constant / x_coefficient
+
+                steps = []
+                steps.append(f"Solving equation: {equation}")
+                steps.append(f"Step 1: Rearrange the equation")
+                steps.append(f"{x_coefficient}x = {right} / {befoCon}")
+                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
+                steps.append(f"x = {constant} / {x_coefficient}")
+                steps.append(f"x = {constant/x_coefficient}")
+
+                result_text.set(f"Result: x = {result}")
+                steps_text.delete(1.0, END)
+                for step in steps:
+                    steps_text.insert(END, step + "\n")
+
+        elif '/' in left:
+            progress.config(text="/ is being detected ^o^")
+            x_coefficient, constant = left.split('x')
+            x_coefficient = float(x_coefficient.strip())
+            befoCon = float(constant.strip('/'))
+            constant = float(right) * float(constant.strip('/'))
+
+            # Check for division by zero
+            if x_coefficient == 0:
+                result_text.set("Error: Division by zero")
+                steps_text.delete(1.0, END)
+            else:
+            # Calculate and display the result
+                result = constant / x_coefficient
+
+                steps = []
+                steps.append(f"Solving equation: {equation}")
+                steps.append(f"Step 1: Rearrange the equation")
+                steps.append(f"{x_coefficient}x = {right} * {befoCon}")
+                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
+                steps.append(f"x = {constant} / {x_coefficient}")
+                steps.append(f"x = {constant/x_coefficient}")
+
+                result_text.set(f"Result: x = {result}")
+                steps_text.delete(1.0, END)
+                for step in steps:
+                    steps_text.insert(END, step + "\n")
+
+
+    except Exception as e:
+        result_text.set(f"Error: {e}")
+        steps_text.delete(1.0, END)
 
 window = Tk()
 window.geometry("800x500")
-window.title("QuantumQuizzle")
-
-# frame = ttk.Frame(window)
-# frame.pack(pady=10)
+window.title("Linear Equation Solver")
 
 ProgName = Label(window, font=('Times new roman', 50, 'bold'), text="QuantumQuizzle (^_^)", fg="Purple")
-ProgName.place(relx=.3, rely=.01)
+ProgName.place(relx=.1, rely=.01)
 
-chooseType = Label(window, font=('Times new roman', 20, 'bold'), text="Choose between Addition, Subtraction, Multiplication, and Division", fg="Green")
-chooseType.place(relx=.02, rely=.2)
+equation_label = ttk.Label(window, text="Enter an equation (e.g., 2x+5=10): ")
+equation_label.place(relx=.1, rely=.2)
+equation_entry = Entry(window)
+equation_entry.place(relx=.3, rely=.2)
 
-optionAdd = ttk.Button(window, text="Addition", command=addition)
-optionAdd.place(relx=.01, rely=.4)
-optionSub = ttk.Button(window, text="Subtraction", command=subtraction)
-optionSub.place(relx=.01, rely=.5)
-optionMult = ttk.Button(window, text="Multiplication", command=multiplication)
-optionMult.place(relx=.01, rely=.6)
-optionDiv = ttk.Button(window, text="Division", command=division)
-optionDiv.place(relx=.01, rely=.7)
+solve_button = ttk.Button(window, text="Solve", command=solve_equation)
+solve_button.place(relx=.6, rely=.2)
 
-result_label = Label(window, font=('Times new roman', 15, 'bold'), text="")
-result_label.place(relx=.2, rely=.8)
+result_text = StringVar()
+result_label = ttk.Label(window, textvariable=result_text)
+result_label.place(relx=.1, rely=.3)
 
-resultOne=ttk.Label(window, text="Enter a Number: ")
-resultOne.place(relx=.3,rely=.5)
-enterOne = Entry(window)
-enterOne.place(relx=.43, rely=.5)
+steps_label = Label(window, font=('Times new roman', 15, 'bold'), text="Solution Steps:")
+steps_label.place(relx=.1, rely=.35)
 
-resultTwo=ttk.Label(window, text="Enter a Number: ")
-resultTwo.place(relx=.3,rely=.7)
-enterTwo = Entry(window)
-enterTwo.place(relx=.43, rely=.7)
+steps_text = Text(window, height=10, width=60)
+steps_text.place(relx=.1, rely=.4)
+
+progress = Label(window, font=('Times new roman', 20, 'bold'), text="I have change", fg="Purple")
+progress.place(relx= .5,rely=.5)
 
 window.mainloop()
