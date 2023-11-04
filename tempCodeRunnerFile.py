@@ -11,8 +11,7 @@ def solve_equation():
 
         x_coefficient, constant = left.split('x')
         x_coefficient = float(x_coefficient.strip())
-        befoCon = float(constant.strip())
-        constant = float(right) - float(constant.strip())
+        constant = float(constant.strip())
 
         # Check for division by zero
         if x_coefficient == 0:
@@ -20,15 +19,16 @@ def solve_equation():
             steps_text.delete(1.0, END)
         else:
             # Calculate and display the result
-            result = constant / x_coefficient
+            result = (constant * -1) / x_coefficient
 
             steps = []
             steps.append(f"Solving equation: {equation}")
             steps.append(f"Step 1: Rearrange the equation")
-            steps.append(f"{x_coefficient}x = {right} - {befoCon}")
-            steps.append(f"Step 2: Divide both sides by {x_coefficient}")
-            steps.append(f"x = {constant} / {x_coefficient}")
-            steps.append(f"x = {constant/x_coefficient}")
+            steps.append(f"{x_coefficient}x = {right} - {constant}")
+            steps.append(f"Step 2: Subtract {constant} from both sides")
+            steps.append(f"{x_coefficient}x = {right - constant}")
+            steps.append(f"Step 3: Divide both sides by {x_coefficient}")
+            steps.append(f"x = ({right - constant}) / {x_coefficient}")
 
             result_text.set(f"Result: x = {result}")
             steps_text.delete(1.0, END)
