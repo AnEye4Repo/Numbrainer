@@ -1,6 +1,30 @@
 #!/usr/bin/env python3
 from tkinter import *
 from tkinter import ttk
+import spacy
+from sympy import symbols, Eq, solve
+
+nlp = spacy.load("en_core_web_sm")
+
+numX = 0
+numSym = 0
+num = 0
+numX = 0
+numSym = 0
+numright = 0
+newx = 0
+x = symbols('x')
+
+
+def custom_tokenizer(nlp):
+    # Add custom rules to the default tokenizer
+    infixes = ['\+', '\-', '\*', '/']
+    infix_regex = spacy.util.compile_infix_regex(infixes)
+    nlp.tokenizer.infix_finditer = infix_regex.finditer
+
+
+custom_tokenizer(nlp)
+
 
 def solve_equation():
     equation = equation_entry.get()
@@ -8,151 +32,80 @@ def solve_equation():
         left, right = equation.split('=')
         left = left.strip()
         right = right.strip()
-        if '+' in left:
-            progress.config(text="+ is being detected ^o^")
-            x_coefficient, constant = left.split('x')
-            x_coefficient = float(x_coefficient.strip())
-            befoCon = float(constant.strip('+'))
-            constant = float(right) - float(constant.strip())
 
-            # Check for division by zero
-            if x_coefficient == 0:
-                result_text.set("Error: Division by zero")
-                steps_text.delete(1.0, END)
+        left_side, right_side = equation.split('=')
+        left_side = left_side.strip()
+        right_side = right_side.strip()
+
+        left_doc = nlp(left_side)
+        left_entities = [token.text for token in left_doc]
+
+        # Tokenize and parse the right side using spaCy
+        right_doc = nlp(right_side)
+        right_entities = [token.text for token in right_doc]
+
+        steps_text.delete(1.0, END)  # Clear the previous steps
+
+        steps_text.insert(END, "Solution Steps:\n")
+        steps_text.insert(END, f"1. Equation: {equation}\n")
+        steps_text.insert(END, f"2. Separate into left and right sides: {left_side} and {right_side}\n")
+
+        for token in left_entities:
+            if 'x' in token:
+                numX = token
+                newx = int(numX.split('x')[0])
+            elif '+' in token or '-' in token or '*' in token or '/' in token:
+                numSym = token
             else:
-            # Calculate and display the result
-                result = constant / x_coefficient
+                num = token
 
-                steps = []
-                steps.append(f"Solving equation: {equation}")
-                steps.append(f"Step 1: Rearrange the equation")
-                steps.append(f"{x_coefficient}x = {right} - {befoCon}")
-                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
-                steps.append(f"x = {constant} / {x_coefficient}")
-                steps.append(f"x = {constant/x_coefficient}")
-
-                result_text.set(f"Result: x = {result}")
-                steps_text.delete(1.0, END)
-                for step in steps:
-                    steps_text.insert(END, step + "\n")
-
-        elif '-' in left:
-            progress.config(text="- is being detected ^o^")
-            x_coefficient, constant = left.split('x')
-            x_coefficient = float(x_coefficient.strip())
-            befoCon = float(constant.strip('-'))
-            constant = float(right) + float(constant.strip('-'))
-
-            # Check for division by zero
-            if x_coefficient == 0:
-                result_text.set("Error: Division by zero")
-                steps_text.delete(1.0, END)
+        for token in right_entities:
+            if 'x' in token:
+                numX = token
+                newx = int(numX.split('x')[0])
             else:
-            # Calculate and display the result
-                result = constant / x_coefficient
+                numright = token
 
-                steps = []
-                steps.append(f"Solving equation: {equation}")
-                steps.append(f"Step 1: Rearrange the equation")
-                steps.append(f"{x_coefficient}x = {right} + {befoCon}")
-                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
-                steps.append(f"x = {constant} / {x_coefficient}")
-                steps.append(f"x = {constant/x_coefficient}")
+        if numSym == '+':
+            equation = Eq(newx * x + int(num), int(numright))
+            steps_text.insert(END, f"3. Combine like terms: {newx}x + {int(num)} = {int(numright)}\n")
+            steps_text.insert(END, f"4. Move term to the other side: {newx}x = {int(numright)} - {int(num)}\n")
+            steps_text.insert(END, f"5. Now find X: {newx}x = {int(numright)- int(num)}\n")
 
-                result_text.set(f"Result: x = {result}")
-                steps_text.delete(1.0, END)
-                for step in steps:
-                    steps_text.insert(END, step + "\n")
+        elif numSym == '-':
+            equation = Eq(newx * x - int(num), int(numright))
+            steps_text.insert(END, f"3. Combine like terms: {newx} * x - {int(num)} = {int(numright)}\n")
+            steps_text.insert(END, f"4. Move term to the other side: {newx}x = {int(numright)} + {int(num)}\n")
+            steps_text.insert(END, f"5. Now find X: {newx}x = {int(numright)+ int(num)}\n")
 
-        elif '*' in left:
-            progress.config(text="* is being detected ^o^")
-            x_coefficient, constant = left.split('x')
-            x_coefficient = float(x_coefficient.strip())
-            befoCon = float(constant.strip('*'))
-            constant = float(right) / float(constant.strip('*'))
+        elif numSym == '*':
+            equation = Eq(newx * x * int(num), int(numright))
+            steps_text.insert(END, f"3. Combine like terms: {newx} * x * {int(num)} = {int(numright)}\n")
+            steps_text.insert(END, f"4. Move term to other side: {newx}x = {int(numright)} / {int(num)}\n")
+            steps_text.insert(END, f"5. Now find X: {newx}x = {int(numright)/int(num)}\n")
 
-            # Check for division by zero
-            if x_coefficient == 0:
-                result_text.set("Error: Division by zero")
-                steps_text.delete(1.0, END)
-            else:
-            # Calculate and display the result
-                result = constant / x_coefficient
+        elif numSym == '/':
+            equation = Eq(newx * x / int(num), int(numright))
+            steps_text.insert(END, f"3. Combine like terms: {newx} * x / {int(num)} = {int(numright)}\n")
+            steps_text.insert(END, f"4. Move term to the other side: {newx}x = {int(numright)} * {int(num)}\n")
+            steps_text.insert(END, f"5. Now find X: {newx}x = {int(numright)* int(num)}\n")
+        else:
+            # Handle the case when numSym is not any of the recognized symbols
+            print("Invalid operation")
+            equation = None
 
-                steps = []
-                steps.append(f"Solving equation: {equation}")
-                steps.append(f"Step 1: Rearrange the equation")
-                steps.append(f"{x_coefficient}x = {right} / {befoCon}")
-                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
-                steps.append(f"x = {constant} / {x_coefficient}")
-                steps.append(f"x = {constant/x_coefficient}")
-
-                result_text.set(f"Result: x = {result}")
-                steps_text.delete(1.0, END)
-                for step in steps:
-                    steps_text.insert(END, step + "\n")
-
-        elif '/' in left:
-            progress.config(text="/ is being detected ^o^")
-            x_coefficient, constant = left.split('x')
-            x_coefficient = float(x_coefficient.strip())
-            befoCon = float(constant.strip('/'))
-            constant = float(right) * float(constant.strip('/'))
-
-            # Check for division by zero
-            if x_coefficient == 0:
-                result_text.set("Error: Division by zero")
-                steps_text.delete(1.0, END)
-            else:
-            # Calculate and display the result
-                result = constant / x_coefficient
-
-                steps = []
-                steps.append(f"Solving equation: {equation}")
-                steps.append(f"Step 1: Rearrange the equation")
-                steps.append(f"{x_coefficient}x = {right} * {befoCon}")
-                steps.append(f"Step 2: Divide both sides by {x_coefficient}")
-                steps.append(f"x = {constant} / {x_coefficient}")
-                steps.append(f"x = {constant/x_coefficient}")
-
-                result_text.set(f"Result: x = {result}")
-                steps_text.delete(1.0, END)
-                for step in steps:
-                    steps_text.insert(END, step + "\n")
+        # Check if equation is created before attempting to solve
+        if equation is not None:
+            solution = solve(equation, x)[0].evalf()
+            formatted_solution = str(solution).rstrip('0').rstrip('.')
+            steps_text.insert(END, f"6. Solve for x: x = {formatted_solution}\n")
+            result_text.set(f"Result: x = {formatted_solution}")
 
 
     except Exception as e:
         result_text.set(f"Error: {e}")
-        steps_text.delete(1.0, END)
-            
-    #     x_coefficient, constant = left.split('x')
-    #     x_coefficient = float(x_coefficient.strip())
-    #     befoCon = float(constant.strip())
-    #     constant = float(right) - float(constant.strip())
+        steps_text.delete(1.0, END)  # Clear the steps in case of an error
 
-    #     # Check for division by zero
-    #     if x_coefficient == 0:
-    #         result_text.set("Error: Division by zero")
-    #         steps_text.delete(1.0, END)
-    #     else:
-    #         # Calculate and display the result
-    #         result = constant / x_coefficient
-
-    #         steps = []
-    #         steps.append(f"Solving equation: {equation}")
-    #         steps.append(f"Step 1: Rearrange the equation")
-    #         steps.append(f"{x_coefficient}x = {right} - {befoCon}")
-    #         steps.append(f"Step 2: Divide both sides by {x_coefficient}")
-    #         steps.append(f"x = {constant} / {x_coefficient}")
-    #         steps.append(f"x = {constant/x_coefficient}")
-
-    #         result_text.set(f"Result: x = {result}")
-    #         steps_text.delete(1.0, END)
-    #         for step in steps:
-    #             steps_text.insert(END, step + "\n")
-    # except Exception as e:
-    #     result_text.set(f"Error: {e}")
-    #     steps_text.delete(1.0, END)
 
 window = Tk()
 window.geometry("800x500")
@@ -180,6 +133,6 @@ steps_text = Text(window, height=10, width=60)
 steps_text.place(relx=.1, rely=.4)
 
 progress = Label(window, font=('Times new roman', 20, 'bold'), text="I have change", fg="Purple")
-progress.place(relx= .5,rely=.5)
+progress.place(relx=.5, rely=.5)
 
 window.mainloop()
